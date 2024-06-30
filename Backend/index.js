@@ -41,7 +41,7 @@ app.post("/todo", async (req, res) => {
 
 app.put("/completed", async (req, res) => {
   const _id = req.body.id;
-    console.log({_id});
+    // console.log({_id});
   const isValid = updateTodo.safeParse({id:_id});
   if (isValid.success) {
     await todos.update(

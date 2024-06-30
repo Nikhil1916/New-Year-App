@@ -8,9 +8,13 @@ const CreateTodo = ({setTodo}) => {
   const title = useRef();
   const description = useRef();
   const onSubmit = async() => {
-    console.log(title.current.value, description);
+    // console.log(title.current.value, description);
+    if(!title.current.value) {
+      alert("title is mandatory");
+      return;
+    }
     try {
-      await fetch("http://localhost:3000/todo",{
+     const res =  await fetch("http://localhost:3000/todo",{
         method:'POST',
         body:JSON.stringify({
           title:title.current.value,
@@ -19,10 +23,11 @@ const CreateTodo = ({setTodo}) => {
         headers:{
           "Content-type":"application/json"
         }
-      },)
-
-      setTodo((val)=>[...val, {title:title.current.value,
-          description: description.current.value,completed:false}])
+      },(d) =>{
+        console.log(d);
+      })
+      const data = await res.json();
+      setTodo((val)=>[...val, data.todo])
           // console.log
     } catch(e) {
       console.log(e);
@@ -30,8 +35,8 @@ const CreateTodo = ({setTodo}) => {
   }
   return (
     <div>
-      <input style={inputStyle} type='text' placeholder='title' ref={title} /><br/>
-      <input style={inputStyle} type='text' placeholder='description' ref={description} /><br />
+      <input style={inputStyle} type='text' placeholder='title' ref={title} required /><br/>
+      <input style={inputStyle} type='text' placeholder='description' ref={description} required /><br />
       <button style={inputStyle} onClick={onSubmit}>Add Todo</button>
     </div>
   )
